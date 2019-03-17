@@ -19,4 +19,4 @@ struct strDateTime
 ```
 
 The time can be automatically adjusted by time zone and European summer time or US daylight savings time.
-It runs on ESP8266 and needs an internet connection.
+It runs on ESP8266 / ESP32 and needs an internet connection.
