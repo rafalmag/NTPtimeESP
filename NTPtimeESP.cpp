@@ -143,21 +143,17 @@ strDateTime NTPtime::ConvertUnixTimestamp( unsigned long _tempTimeStamp) {
 // Summertime calculates the daylight saving time for middle Europe. Input: Unixtime in UTC
 //
 boolean NTPtime::summerTime(unsigned long _timeStamp ) {
-
 	strDateTime  _tempDateTime;
 	_tempDateTime = ConvertUnixTimestamp(_timeStamp);
 	// printTime("Innerhalb ", _tempDateTime);
 
 	if (_tempDateTime.month < 3 || _tempDateTime.month > 10) return false; // keine Sommerzeit in Jan, Feb, Nov, Dez
 	if (_tempDateTime.month > 3 && _tempDateTime.month < 10) return true; // Sommerzeit in Apr, Mai, Jun, Jul, Aug, Sep
-	if (_tempDateTime.month == 3 && (_tempDateTime.hour + 24 * _tempDateTime.day) >= (3 +  24 * (31 - (5 * _tempDateTime.year / 4 + 4) % 7)) || _tempDateTime.month == 10 && (_tempDateTime.hour + 24 * _tempDateTime.day) < (3 +  24 * (31 - (5 * _tempDateTime.year / 4 + 1) % 7)))
-		return true;
-	else
-		return false;
+	return (_tempDateTime.month == 3 && ((_tempDateTime.hour + 24 * _tempDateTime.day) >= (3 +  24 * (31 - (5 * _tempDateTime.year / 4 + 4) % 7))))
+		|| (_tempDateTime.month == 10 && ((_tempDateTime.hour + 24 * _tempDateTime.day) < (3 +  24 * (31 - (5 * _tempDateTime.year / 4 + 1) % 7))));
 }
 
 boolean NTPtime::daylightSavingTime(unsigned long _timeStamp) {
-
 	strDateTime  _tempDateTime;
 	_tempDateTime = ConvertUnixTimestamp(_timeStamp);
 
@@ -208,7 +204,6 @@ boolean NTPtime::daylightSavingTime(unsigned long _timeStamp) {
 
 
 unsigned long NTPtime::adjustTimeZone(unsigned long _timeStamp, float _timeZone, int _DayLightSaving) {
-	strDateTime _tempDateTime;
 	_timeStamp += (unsigned long)(_timeZone *  3600.0); // adjust timezone
 	if (_DayLightSaving == 1 && summerTime(_timeStamp)) _timeStamp += 3600; // European Summer time
 	if (_DayLightSaving == 2 && daylightSavingTime(_timeStamp)) _timeStamp += 3600; // US daylight time
